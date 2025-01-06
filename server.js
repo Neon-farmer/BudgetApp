@@ -1,20 +1,19 @@
-// Import required modules
 import express from 'express';
 import path from 'path';
 
-// Initialize the express app
 const app = express();
 
-// Serve static files from the React app's build directory
-app.use(express.static(path.join(__dirname, 'build')));
+// Serve static files from the React app's dist directory
+const distPath = path.join(__dirname, 'dist');  // Make sure dist is in the correct location
+app.use(express.static(distPath));
 
-// Handle all other requests by returning the React index.html
+// All other requests should return the index.html from the dist folder (for React Router support)
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  res.sendFile(path.join(distPath, 'index.html'));
 });
 
 // Set the server to listen on the specified port
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
