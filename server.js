@@ -1,17 +1,17 @@
-// Required for MonsterASP hosting
+// Import required modules
+import http from 'http';
+import os from 'os';
+import url from 'url';
 
-var http = require('http');
-var os = require('os');
-var url = require('url');
-
-http.createServer(function (req, res) {
+// Create the HTTP server
+http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html' });
 
-    let currentPath = process.cwd();
-    let scriptPath = __dirname;
+    const currentPath = process.cwd();
+    const scriptPath = new URL('.', import.meta.url).pathname;
 
-    let protocol = req.headers['x-forwarded-proto'] || 'http';
-    let currentUrl = protocol + '://' + req.headers.host + req.url;
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const currentUrl = `${protocol}://${req.headers.host}${req.url}`;
 
     const envVariables = [
         "PORT",
@@ -30,7 +30,7 @@ http.createServer(function (req, res) {
         <h1>Server Information:</h1>
         <ul>
             <li><strong>Node version:</strong> ${process.version}</li>
-            <li><strong>Environment:</strong> ${process.env['NODE_ENV']}</li>
+            <li><strong>Environment:</strong> ${process.env['NODE_ENV'] || 'Not set'}</li>
             <li><strong>Working Directory:</strong> ${currentPath}</li>
             <li><strong>Script Path:</strong> ${scriptPath}</li>
         </ul>
@@ -41,7 +41,7 @@ http.createServer(function (req, res) {
             <li><strong>Host:</strong> ${req.headers.host}</li>
             <li><strong>Original URL:</strong> ${req.headers['x-original-url'] || 'Not set'}</li>
             <li><strong>Rewrite URL:</strong> ${req.headers['x-rewrite-url'] || 'Not set'}</li>
-            <li><strong>Protocol:</strong> ${req.headers['x-forwarded-proto'] || 'http'}</li>
+            <li><strong>Protocol:</strong> ${protocol}</li>
         </ul>
 
         <h2>Environment Variables:</h2>
@@ -59,7 +59,7 @@ http.createServer(function (req, res) {
         <ul>
     `;
 
-    for (let header in req.headers) {
+    for (const header in req.headers) {
         html += `<li><strong>${header}:</strong> ${req.headers[header]}</li>`;
     }
 
