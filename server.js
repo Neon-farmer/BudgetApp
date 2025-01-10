@@ -1,19 +1,67 @@
-import express from 'express';
+import http from 'http';
+import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const app = express();
+const __dirname = path.dirname(fileURLToPath(import.meta.url)); // Get the current directory path
 
-// Serve static files from the React app's dist directory
-const distPath = path.join(__dirname, 'dist');  // Make sure dist is in the correct location
-app.use(express.static(distPath));
+const server = http.createServer((req, res) => {
+  const safePath = path.normalize(req.url).replace(/^(\.\.[\/\\])+/, ''); // Prevent directory traversal
+  const filePath = path.join(__dirname, 'build', safePath === '/' ? 'index.html' : safePath);
 
-// All other requests should return the index.html from the dist folder (for React Router support)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(distPath, 'index.html'));
+  // Determine the content type based on file extension
+  const extname = path.extname(filePath);
+  let contentType = 'application/octet-stream'; // Default content type for unknown files
+
+  switch (extname) {
+    case '.html':
+      contentType = 'text/html';
+      break;
+    case '.js':
+      contentType = 'application/javascript';
+      break;
+    case '.css':
+      contentType = 'text/css';
+      break;
+    case '.json':
+      contentType = 'application/json';
+      break;
+    case '.png':
+      contentType = 'image/png';
+      break;
+    case '.jpg':
+    case '.jpeg':
+      contentType = 'image/jpeg';
+      break;
+    case '.gif':
+      contentType = 'image/gif';
+      break;
+    case '.svg':
+      contentType = 'image/svg+xml';
+      break;
+    // Add more cases for other file types as needed
+  }
+
+  fs.readFile(filePath, (err, content) => {
+    if (err) {
+      console.error(`Error serving file: ${filePath} - ${err.message}`);
+      if (err.code === 'ENOENT') {
+        res.statusCode = 404;
+        res.end('404: File Not Found');
+      } else {
+        res.statusCode = 500;
+        res.end('500: Internal Server Error');
+      }
+      return;
+    }
+
+    res.statusCode = 200;
+    res.setHeader('Content-Type', contentType);
+    res.end(content);
+  });
 });
 
-// Set the server to listen on the specified port
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
