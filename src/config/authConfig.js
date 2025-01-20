@@ -2,9 +2,9 @@ import { LogLevel } from '@azure/msal-browser';
 
 export const msalConfig = {
     auth: {
-        clientId: '6ce1f29a-d59f-4b06-8b79-5b373126a3bf', // This is the ONLY mandatory field that you need to supply.
-        authority: 'https://ombudgetapp.ciamlogin.com/', // Replace the placeholder with your tenant subdomain 
-        redirectUri: 'http://localhost:5173/redirect', // Points to window.location.origin. You must register this URI on Microsoft Entra admin center/App Registration.
+        clientId: '6ce1f29a-d59f-4b06-8b79-5b373126a3bf', 
+        authority: 'https://ombudgetapp.ciamlogin.com/',
+        redirectUri: 'http://localhost:3001/redirect', // Points to window.location.origin. You must register this URI on Microsoft Entra admin center/App Registration.
         postLogoutRedirectUri: '/', // Indicates the page to navigate after logout.
         navigateToLoginRequestUrl: false, // If "true", will navigate back to the original request location before processing the auth code response.
     },
@@ -46,6 +46,6 @@ export const msalConfig = {
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
 export const loginRequest = {
-    scopes: ["https://ombudgetapp.onmicrosoft.com/cb33bc74-391a-4691-b2cb-2acda62dcd78/access_as_user"],
-  };
+    scopes: ["openid", "profile","https://ombudgetapp.onmicrosoft.com/cb33bc74-391a-4691-b2cb-2acda62dcd78/access_as_user"],
+};
   
