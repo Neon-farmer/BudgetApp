@@ -22,7 +22,7 @@ export const useAuthToken = () => {
     try {
       const account = instance.getActiveAccount();
       if (!account) throw new Error("No active account!");
-
+      // MSAL Magic
       const response = await instance.acquireTokenSilent({
         ...loginRequest,
         account,

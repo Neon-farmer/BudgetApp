@@ -21,6 +21,7 @@ const WeatherForecast = () => {
 
         const result = await callApi(
           "https://budgetapi.runasp.net/WeatherForecast"
+          //define our request body here
         );
         setData(result);
         setHasFetched(true); // Mark as fetched
