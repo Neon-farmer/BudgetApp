@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "../config/apiConfig";
+
 /* 
 FetchApi is a utility function used to make API requests. 
 It handles the HTTP request and expects an authorization token 
@@ -9,7 +11,7 @@ export const fetchApi = async (
   token: string,
   options: RequestInit = {}
 ) => {
-  const response = await fetch(url, {
+  const response = await fetch(`${API_BASE_URL}${url}`, {
     ...options,
     headers: {
       ...options.headers,

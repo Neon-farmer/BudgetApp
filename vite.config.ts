@@ -1,11 +1,13 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: parseInt(process.env.PORT || '3000', 10),
+    port: 3001,         
+    strictPort: true,   
   },
-})
-
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'], // Ensures module resolution
+  },
+});

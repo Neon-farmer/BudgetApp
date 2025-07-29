@@ -9,12 +9,16 @@ import { theme } from "./css/theme";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <MsalProvider instance={msalInstance} /* Authentication */>
-      <ThemeProvider theme={theme} /* Global Styles */>
-        <App />
-      </ThemeProvider>
-    </MsalProvider>
-  </React.StrictMode>
-);
+(async () => {
+  await msalInstance.initialize();
+
+  ReactDOM.createRoot(document.getElementById("root")!).render(
+    <React.StrictMode>
+      <MsalProvider instance={msalInstance}>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </MsalProvider>
+    </React.StrictMode>
+  );
+})();

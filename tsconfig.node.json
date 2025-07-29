@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "types": ["node"],
+    "target": "es2017",
+    "types": ["vite", "node"],
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "Node",
@@ -8,3 +9,4 @@
   },
   "include": ["vite.config.ts"]
 }
+
