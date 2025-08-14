@@ -22,4 +22,107 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables and configuration
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# API Configuration (already present)
 apiConfig.ts
+src/config/apiConfig.ts
+
+# Sensitive configuration files
+authConfig.js
+src/config/authConfig.js
+**/secrets.*
+**/config/secrets.*
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Security and certificates
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cert
+*.ca-bundle
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# OS generated files
+Thumbs.db
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# IDEs and editors
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+.parcel-cache/
+
+# Coverage and testing
+coverage/
+*.lcov
+.nyc_output/
+
+# Debug files
+*.tlog
+*.idb
+*.pdb
+
+# Package manager files
+.pnpm-store/
+.yarn/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
