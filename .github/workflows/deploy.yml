@@ -1,0 +1,68 @@
+name: Deploy to MonsterASP
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build application
+      run: npm run build
+      env:
+        VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-files
+        path: dist/
+
+    # Option A: Deploy via FTP (if MonsterASP supports FTP)
+    - name: Deploy to MonsterASP via FTP
+      if: github.ref == 'refs/heads/main'
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./dist/
+        server-dir: /public_html/
+
+    # Option B: Deploy via SSH (if MonsterASP supports SSH)
+    # - name: Deploy to MonsterASP via SSH
+    #   if: github.ref == 'refs/heads/main'
+    #   uses: appleboy/ssh-action@v1.0.0
+    #   with:
+    #     host: ${{ secrets.SSH_HOST }}
+    #     username: ${{ secrets.SSH_USERNAME }}
+    #     password: ${{ secrets.SSH_PASSWORD }}
+    #     script: |
+    #       cd /path/to/your/app
+    #       rm -rf dist/
+    #       # Files would be uploaded separately via SCP action
+
+    # Option C: Deploy via Git deployment (if MonsterASP supports it)
+    # - name: Deploy to MonsterASP via Git
+    #   if: github.ref == 'refs/heads/main'
+    #   run: |
+    #     git config --global user.email "action@github.com"
+    #     git config --global user.name "GitHub Action"
+    #     git remote add monsterasp ${{ secrets.DEPLOY_REPO_URL }}
+    #     git subtree push --prefix=dist monsterasp main

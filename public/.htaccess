@@ -1,0 +1,54 @@
+# Apache configuration for React SPA (Single Page Application)
+# Place this file in your web root directory
+
+RewriteEngine On
+RewriteBase /
+
+# Handle React Router - redirect all requests to index.html
+# except for files that actually exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+
+# Security Headers
+Header always set X-Frame-Options DENY
+Header always set X-Content-Type-Options nosniff
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy strict-origin-when-cross-origin
+
+# HTTPS redirect (uncomment if you want to force HTTPS)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Cache static assets
+<FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+    ExpiresActive On
+    ExpiresDefault "access plus 1 year"
+    Header append Cache-Control "public"
+</FilesMatch>
+
+# Cache HTML files for a shorter time
+<FilesMatch "\.(html)$">
+    ExpiresActive On
+    ExpiresDefault "access plus 1 hour"
+    Header append Cache-Control "must-revalidate"
+</FilesMatch>
+
+# Compress text files
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Prevent access to sensitive files
+<FilesMatch "\.(env|log|md|git)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

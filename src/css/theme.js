@@ -1,27 +1,18 @@
+// Legacy theme.js - maintained for backward compatibility
+// New theme system is in themes/ directory and ThemeProvider.tsx
 
-// theme.js
-export const theme = {
-    colors: {
-      primary: '#7279BC', // Soft blue
-      secondary: '#BA6F55', // Warm terracotta
-      background: '#F7F7F7',
-      cardBackground: '#E5DDEF',
-      cardBorder: '#BA6F55',
-    },
-    fonts: {
-      body: 'Arial, sans-serif',
-    },
-  };
+import { defaultTheme } from './themes/default';
 
+// Export the default theme for existing components
+export const theme = defaultTheme;
 
-/*
-
-Implementation:
-
-export const Container = styled.div`
-  background-color: ${({ theme }) => theme.colors.background};
-  font-family: ${({ theme }) => theme.fonts.body};
-`;
-
-*/
-  
+// Re-export theme utilities for easier imports
+export { defaultTheme } from './themes/default';
+export { ThemeProvider, useTheme } from './ThemeProvider';
+export { 
+  themeRegistry, 
+  getThemeByName, 
+  getAllThemes, 
+  registerTheme, 
+  getInitialTheme 
+} from './themeRegistry';

@@ -30,3 +30,14 @@ body {
 p {
     margin: 0;
 }
+
+/* Global padding for pages with floating navigation */
+.page-content {
+    padding-bottom: 120px;
+}
+
+/* Ensure smooth transitions for the floating nav */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

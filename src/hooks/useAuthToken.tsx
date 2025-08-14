@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../config/authConfig";
+import { handleAuthError } from "../utils/authRedirect";
 
 export const useAuthToken = () => {
   const { instance } = useMsal();
@@ -15,13 +16,20 @@ export const useAuthToken = () => {
 
   const getToken = async () => {
     if (!isMsalReady) {
-      console.error("MSAL is not initialized yet.");
-      return;
+      const error = new Error("MSAL is not initialized yet.");
+      console.error(error.message);
+      handleAuthError(error, "MSAL initialization");
+      throw error;
     }
 
     try {
       const account = instance.getActiveAccount();
-      if (!account) throw new Error("No active account!");
+      if (!account) {
+        const error = new Error("No active account!");
+        handleAuthError(error, "Token acquisition");
+        throw error;
+      }
+      
       // MSAL Magic
       const response = await instance.acquireTokenSilent({
         ...loginRequest,
@@ -32,6 +40,10 @@ export const useAuthToken = () => {
       return response.accessToken;
     } catch (error) {
       console.error("Token acquisition failed:", error);
+      
+      // Handle auth errors with redirect
+      handleAuthError(error, "Token acquisition");
+      
       throw error;
     }
   };

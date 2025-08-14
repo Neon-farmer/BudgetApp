@@ -4,8 +4,7 @@ import { PublicClientApplication } from "@azure/msal-browser";
 import { MsalProvider } from "@azure/msal-react";
 import App from "./App";
 import { msalConfig } from "./config/authConfig";
-import { ThemeProvider } from "styled-components";
-import { theme } from "./css/theme";
+import { ThemeProvider } from "./css/ThemeProvider";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
@@ -15,7 +14,7 @@ const msalInstance = new PublicClientApplication(msalConfig);
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <MsalProvider instance={msalInstance}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider>
           <App />
         </ThemeProvider>
       </MsalProvider>
