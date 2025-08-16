@@ -43,7 +43,7 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./dist/
-        server-dir: /public_html/
+        server-dir: /wwwroot/
 
     # Option B: Deploy via SSH (if MonsterASP supports SSH)
     # - name: Deploy to MonsterASP via SSH
