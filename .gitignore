@@ -32,13 +32,7 @@ dist-ssr
 .env.production.local
 .env.*.local
 
-# API Configuration (already present)
-apiConfig.ts
-src/config/apiConfig.ts
 
-# Sensitive configuration files
-authConfig.js
-src/config/authConfig.js
 **/secrets.*
 **/config/secrets.*
 
