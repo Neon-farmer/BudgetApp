@@ -5,6 +5,7 @@ import { Sidebar, SidebarItem } from "./Sidebar";
 import { Main } from "./Main";
 import { Footer } from "./Footer";
 import { Loading } from "../Loading";
+import { handleAuthError } from "../../utils/authRedirect";
 
 export interface LayoutProps {
   children: React.ReactNode;
@@ -42,6 +43,7 @@ export const Layout: React.FC<LayoutProps> = ({
     { label: "Envelopes", path: "/budget/envelopes" },
     { label: "Planner", path: "/budget/planner" },
     { label: "Settings", path: "/budget/settings" },
+    { label: "Help", path: "/budget/help" },
   ];
 
   const items = sidebarItems.length > 0 ? sidebarItems : defaultSidebarItems;

@@ -133,7 +133,7 @@ export const TransactionDetailPage = () => {
   return (
     <Container breadcrumbs={[
       { label: 'Home', path: '/budget/home' },
-      { label: 'Transactions', path: '/budget/transactions' },
+      { label: `${envelope ? envelope.name : 'Loading...'}`, path: `/budget/envelope/${envelope ? envelope.id : ''}` },
       { label: `Transaction #${transaction.id}` }
     ]}>
       <PageTitle align="center">Transaction Details</PageTitle>
@@ -177,9 +177,7 @@ export const TransactionDetailPage = () => {
         <Button onClick={handleBackToEnvelope}>
           View Envelope
         </Button>
-        <Button onClick={() => navigate('/budget/transactions')}>
-          All Transactions
-        </Button>
+       
       </ActionButtons>
     </Container>
   );

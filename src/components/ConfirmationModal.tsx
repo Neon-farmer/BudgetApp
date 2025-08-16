@@ -33,11 +33,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
       <MessageContainer>
-        <IconContainer $variant={variant}>
-          {variant === 'danger' && <DangerIcon>⚠️</DangerIcon>}
-          {variant === 'warning' && <WarningIcon>⚠️</WarningIcon>}
-          {variant === 'info' && <InfoIcon>ℹ️</InfoIcon>}
-        </IconContainer>
+       
         <Message>{message}</Message>
       </MessageContainer>
       
