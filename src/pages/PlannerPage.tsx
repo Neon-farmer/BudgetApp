@@ -188,7 +188,7 @@ export const PlannerPage = () => {
   return (
     <Container breadcrumbs={commonBreadcrumbs.planner}>
       <Header>
-        <PageTitle align="center">Budget Planner</PageTitle>
+        <PageTitle align="center">Planner</PageTitle>
         <HeaderActions>
           <Button onClick={handleCreatePlan}>
             Create New Plan
@@ -256,7 +256,7 @@ export const PlannerPage = () => {
         confirmText="Update Balances"
         cancelText="Cancel"
         isLoading={updatingBalances}
-        variant="info"
+        // variant="info"
       />
     </Container>
   );

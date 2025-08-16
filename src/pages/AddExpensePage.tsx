@@ -231,8 +231,7 @@ export const AddExpensePage = () => {
         ]}
       >
         <SuccessMessage>
-          <strong>Success!</strong> Expense has been recorded successfully. 
-          You will be redirected to the home page in a moment.
+          <strong>Success!</strong>
         </SuccessMessage>
       </Container>
     );

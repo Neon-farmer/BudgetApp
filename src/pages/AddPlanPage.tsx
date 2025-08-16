@@ -187,7 +187,7 @@ export const AddPlanPage = () => {
         ]}
       >
         <SuccessMessage>
-          <strong>Success!</strong> Plan created successfully. You will be redirected to the planner page in a moment.
+          <strong>Success!</strong>
         </SuccessMessage>
       </Container>
     );

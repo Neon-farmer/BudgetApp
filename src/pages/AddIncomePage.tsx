@@ -147,7 +147,7 @@ export const AddIncomePage = () => {
         
         // Auto-redirect after 2 seconds
         setTimeout(() => {
-          navigate("/");
+          navigate("/budget/home");
         }, 2000);
       }
     } catch (err) {

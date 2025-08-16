@@ -9,7 +9,7 @@ export interface LogoProps {
 }
 
 export const Logo: React.FC<LogoProps> = ({ 
-  text = 'Budget App', 
+  text = 'TrueMonth', 
   onClick,
   className 
 }) => {
