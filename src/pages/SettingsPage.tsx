@@ -236,7 +236,6 @@ export const SettingsPage: React.FC = () => {
   };
 
   const availableEnvelopes = envelopes;
-  const nonSystemEnvelopes = availableEnvelopes.filter((env: Envelope) => !env.isSystemEnvelope);
 
   if (isLoading) {
     return (
@@ -348,7 +347,7 @@ export const SettingsPage: React.FC = () => {
                   <ControlLabel>Envelope</ControlLabel>
 
                 <EnvelopeSelector
-                  envelopes={nonSystemEnvelopes}
+                  envelopes={availableEnvelopes}
                   value={settings.titheEnvelopeId ? settings.titheEnvelopeId.toString() : ''}
                   onChange={(value) => setSettings({ 
                     ...settings, 

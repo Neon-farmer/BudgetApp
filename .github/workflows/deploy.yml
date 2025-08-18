@@ -45,6 +45,12 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./dist/
         server-dir: /wwwroot/wwwroot/
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/.DS_Store
+
 
     # Option B: Deploy via SSH (if MonsterASP supports SSH)
     # - name: Deploy to MonsterASP via SSH
