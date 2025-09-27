@@ -1,16 +1,29 @@
 import { LogLevel } from '@azure/msal-browser';
 
+// Get configuration from environment variables
+const getAppBaseUrl = () => {
+  return import.meta.env.VITE_APP_BASE_URL || window.location.origin;
+};
+
+const getClientId = () => {
+  return import.meta.env.VITE_AZURE_CLIENT_ID || '6ce1f29a-d59f-4b06-8b79-5b373126a3bf';
+};
+
+const getApiScope = () => {
+  return import.meta.env.VITE_AZURE_API_SCOPE || 'https://ombudgetapp.onmicrosoft.com/cb33bc74-391a-4691-b2cb-2acda62dcd78/access_as_user';
+};
+
 export const msalConfig = {
     auth: {
-        clientId: '6ce1f29a-d59f-4b06-8b79-5b373126a3bf', 
+        clientId: getClientId(),
         authority: 'https://ombudgetapp.ciamlogin.com/',
-        redirectUri: 'https://budget.runasp.net/redirect', // Points to window.location.origin. You must register this URI on Microsoft Entra admin center/App Registration.
-        postLogoutRedirectUri: '/', // Indicates the page to navigate after logout.
-        navigateToLoginRequestUrl: false, // If "true", will navigate back to the original request location before processing the auth code response.
+        redirectUri: `${getAppBaseUrl()}/redirect`,
+        postLogoutRedirectUri: '/', 
+        navigateToLoginRequestUrl: false,
     },
     cache: {
-        cacheLocation: 'sessionStorage', // Configures cache location. "sessionStorage" is more secure, but "localStorage" gives you SSO between tabs.
-        storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
+        cacheLocation: 'sessionStorage',
+        storeAuthStateInCookie: false,
     },
     system: {
         loggerOptions: {
@@ -18,18 +31,21 @@ export const msalConfig = {
                 if (containsPii) {
                     return;
                 }
+                const env = import.meta.env.DEV ? 'DEV' : 'PROD';
+                const clientPrefix = getClientId().substring(0, 8);
+                
                 switch (level) {
                     case LogLevel.Error:
-                        console.error(message);
+                        console.error(`[${env}:${clientPrefix}] ${message}`);
                         return;
                     case LogLevel.Info:
-                        console.info(message);
+                        console.info(`[${env}:${clientPrefix}] ${message}`);
                         return;
                     case LogLevel.Verbose:
-                        console.debug(message);
+                        console.debug(`[${env}:${clientPrefix}] ${message}`);
                         return;
                     case LogLevel.Warning:
-                        console.warn(message);
+                        console.warn(`[${env}:${clientPrefix}] ${message}`);
                         return;
                     default:
                         return;
@@ -39,13 +55,19 @@ export const msalConfig = {
     },
 };
 
-/**
- * Scopes you add here will be prompted for user consent during sign-in.
- * By default, MSAL.js will add OIDC scopes (openid, profile, email) to any login request.
- * For more information about OIDC scopes, visit: 
- * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
- */
+// Login request for initial authentication
 export const loginRequest = {
-    scopes: ["openid", "profile","https://ombudgetapp.onmicrosoft.com/cb33bc74-391a-4691-b2cb-2acda62dcd78/access_as_user"],
+    scopes: ["openid", "profile", "email"],
 };
-  
+
+// API request for accessing your backend
+export const apiRequest = {
+    scopes: [getApiScope()],
+};
+
+// Debug info
+console.log(`🔧 Auth Config:`);
+console.log(`  Environment: ${import.meta.env.DEV ? 'Development' : 'Production'}`);
+console.log(`  Client ID: ${getClientId().substring(0, 8)}...`);
+console.log(`  Redirect URI: ${getAppBaseUrl()}/redirect`);
+console.log(`  API Scope: ${getApiScope()}`);

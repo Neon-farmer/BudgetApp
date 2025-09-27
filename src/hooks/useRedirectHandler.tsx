@@ -11,8 +11,28 @@ export const useRedirectHandler = () => {
   useEffect(() => {
     const handleRedirect = async () => {
       try {
-        await instance.initialize();
+        // Check if there are error parameters in the URL
+        const urlParams = new URLSearchParams(window.location.hash.substring(1));
+        const error = urlParams.get('error');
+        const errorDescription = urlParams.get('error_description');
 
+        if (error) {
+          console.log("Authentication error:", error);
+          if (errorDescription) {
+            console.log("Error description:", decodeURIComponent(errorDescription));
+          }
+          
+          // Handle specific error cases
+          if (error === 'access_denied') {
+            console.log("User cancelled authentication");
+          }
+          
+          // Redirect to login page for all error cases
+          navigate("/login");
+          return;
+        }
+
+        await instance.initialize();
         const response = await instance.handleRedirectPromise();
 
         if (response) {
@@ -20,6 +40,7 @@ export const useRedirectHandler = () => {
           instance.setActiveAccount(response.account);
           navigate("/budget/home");
         } else {
+          // No response and no error - redirect to login
           navigate("/login");
         }
       } catch (error) {

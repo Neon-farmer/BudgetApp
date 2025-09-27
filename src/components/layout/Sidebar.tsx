@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useLogout } from '../../hooks/useLogout';
 
 export interface SidebarItem {
   label: string;
@@ -25,6 +26,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
   const navigate = useNavigate();
+  const { handleLogout } = useLogout();
 
   const toggleExpanded = (index: number) => {
     const newExpanded = new Set(expandedItems);
@@ -34,6 +36,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       newExpanded.add(index);
     }
     setExpandedItems(newExpanded);
+  };
+
+  const onLogoutClick = () => {
+    handleLogout();
+    if (onClose) onClose(); // Close sidebar on mobile after logout
   };
 
   const handleItemClick = (item: SidebarItem, index: number) => {
@@ -55,6 +62,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <SidebarContent>
           <SidebarMenu items={items} onItemClick={handleItemClick} expandedItems={expandedItems} />
         </SidebarContent>
+        <SidebarFooter>
+          <LogoutButton onClick={onLogoutClick}>
+            <LogoutIcon>⟵</LogoutIcon>
+            <LogoutText>Logout</LogoutText>
+          </LogoutButton>
+        </SidebarFooter>
       </SidebarContainer>
     </>
   );
@@ -138,6 +151,8 @@ const SidebarContainer = styled.aside<{ $isOpen: boolean }>`
   transform: translateX(${({ $isOpen }) => $isOpen ? '0' : '-100%'});
   transition: transform 0.3s ease;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   
   @media (min-width: 768px) {
     top: 72px;
@@ -152,6 +167,52 @@ const SidebarContainer = styled.aside<{ $isOpen: boolean }>`
 
 const SidebarContent = styled.div`
   padding: 20px 0;
+  flex: 1;
+`;
+
+const SidebarFooter = styled.div`
+  padding: 20px;
+  border-top: 1px solid ${({ theme }) => theme.colors.border || '#e5e7eb'};
+  margin-top: auto;
+`;
+
+const LogoutButton = styled.button`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  border-radius: ${({ theme }) => theme.borderRadius?.md || '8px'};
+  
+  &:hover {
+    background: ${({ theme }) => theme.colors.gray?.[100] || '#f3f4f6'};
+    color: ${({ theme }) => theme.colors.danger || '#dc2626'};
+  }
+  
+  &:focus {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: -2px;
+  }
+`;
+
+const LogoutIcon = styled.span`
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  min-width: 20px;
+`;
+
+const LogoutText = styled.span`
+  flex: 1;
 `;
 
 const MenuList = styled.ul<{ $level: number }>`
