@@ -6,12 +6,23 @@ const getAppBaseUrl = () => {
 };
 
 const getClientId = () => {
-  return import.meta.env.VITE_AZURE_CLIENT_ID || '6ce1f29a-d59f-4b06-8b79-5b373126a3bf';
+  const clientId = import.meta.env.VITE_AZURE_CLIENT_ID || '6ce1f29a-d59f-4b06-8b79-5b373126a3bf';
+  console.log('🔧 Using Client ID:', clientId.substring(0, 8) + '...');
+  return clientId;
 };
 
 const getApiScope = () => {
   return import.meta.env.VITE_AZURE_API_SCOPE || 'https://ombudgetapp.onmicrosoft.com/cb33bc74-391a-4691-b2cb-2acda62dcd78/access_as_user';
 };
+
+// Debug environment variables at build time
+console.log('🔧 Environment Variables Check:');
+console.log('  VITE_APP_BASE_URL:', import.meta.env.VITE_APP_BASE_URL);
+console.log('  VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
+console.log('  VITE_AZURE_CLIENT_ID:', import.meta.env.VITE_AZURE_CLIENT_ID ? import.meta.env.VITE_AZURE_CLIENT_ID.substring(0, 8) + '...' : 'NOT SET');
+console.log('  VITE_AZURE_API_SCOPE:', import.meta.env.VITE_AZURE_API_SCOPE ? 'SET' : 'NOT SET');
+console.log('  import.meta.env.DEV:', import.meta.env.DEV);
+console.log('  import.meta.env.PROD:', import.meta.env.PROD);
 
 export const msalConfig = {
     auth: {
@@ -64,10 +75,3 @@ export const loginRequest = {
 export const apiRequest = {
     scopes: [getApiScope()],
 };
-
-// Debug info
-console.log(`🔧 Auth Config:`);
-console.log(`  Environment: ${import.meta.env.DEV ? 'Development' : 'Production'}`);
-console.log(`  Client ID: ${getClientId().substring(0, 8)}...`);
-console.log(`  Redirect URI: ${getAppBaseUrl()}/redirect`);
-console.log(`  API Scope: ${getApiScope()}`);
