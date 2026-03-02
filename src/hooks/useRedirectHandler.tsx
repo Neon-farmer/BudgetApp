@@ -32,7 +32,6 @@ export const useRedirectHandler = () => {
           return;
         }
 
-        await instance.initialize();
         const response = await instance.handleRedirectPromise();
 
         if (response) {
