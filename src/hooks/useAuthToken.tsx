@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
-import { loginRequest } from "../config/authConfig";
+import { apiRequest } from "../config/authConfig";
 import { handleAuthError } from "../utils/authRedirect";
 
 export const useAuthToken = () => {
@@ -32,7 +32,7 @@ export const useAuthToken = () => {
       
       // MSAL Magic
       const response = await instance.acquireTokenSilent({
-        ...loginRequest,
+        ...apiRequest,
         account,
       });
 

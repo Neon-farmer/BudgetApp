@@ -10,11 +10,6 @@
 export const redirectToLogin = (reason?: string) => {
   console.warn('Redirecting to login page:', reason || 'Authentication required');
   
-  // Clear any existing authentication state if needed
-  // You could add localStorage cleanup here if you store any auth data
-  localStorage.removeItem('authToken'); // Clear any stored tokens
-  sessionStorage.clear(); // Clear session data
-  
   // Use window.location for reliable redirect that works from anywhere
   // This ensures the redirect works even from service workers or async contexts
   window.location.href = '/login';

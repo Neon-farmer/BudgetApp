@@ -1,5 +1,5 @@
 import { IPublicClientApplication, AccountInfo } from "@azure/msal-browser";
-import { loginRequest } from "../config/authConfig";
+import { apiRequest } from "../config/authConfig";
 import { handleAuthError } from "../utils/authRedirect";
 
 /**
@@ -29,7 +29,7 @@ export class AuthService {
 
       // Try to get token silently first
       const response = await this.msalInstance.acquireTokenSilent({
-        ...loginRequest,
+        ...apiRequest,
         account,
       });
 
