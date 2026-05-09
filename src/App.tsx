@@ -18,6 +18,7 @@ import { TransactionsPage } from "./pages/TransactionsPage";
 import { EnvelopeDetailPage } from "./pages/EnvelopeDetailPage";
 import { PlanDetailPage } from "./pages/PlanDetailPage";
 import { TransactionDetailPage } from "./pages/TransactionDetailPage";
+import { HelpPage } from "./pages/HelpPage";
 import { Layout } from "./components/layout/Layout";
 import { LoadingProvider, useGlobalLoading } from "./contexts/LoadingContext";
 import { SettingsPage } from "./pages/SettingsPage";
@@ -65,6 +66,7 @@ const App = () => {
                       <Route path="/planner/:id" element={<PlanDetailPage />} />
                       {/* Transaction Routes */}
                       <Route path="/transactions" element={<TransactionsPage />} />
+                      <Route path="/help" element={<HelpPage />} />
                       <Route path="/transaction/new" element={<AddTransactionPage />} />
                       <Route path="/transaction/new/:envelopeId" element={<AddTransactionPage />} />
                       <Route path="/transaction/:id" element={<TransactionDetailPage />} />

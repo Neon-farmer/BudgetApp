@@ -146,7 +146,13 @@ export const EnvelopesPage = () => {
   return (
     <Container breadcrumbs={commonBreadcrumbs.envelopes}>
       <PageTitle align="center">Envelopes</PageTitle>
-      
+      {/* Show total of all envelopes */}
+      <TotalRow>
+        <TotalLabel>Total</TotalLabel>
+        <TotalValue>
+          <AutoCurrencyCell value={envelopes.reduce((s, e) => s + (e.balance ?? 0), 0)} />
+        </TotalValue>
+      </TotalRow>
       <ButtonGroup>
         <Button onClick={handleAddEnvelope}>
           Add Envelope
@@ -234,3 +240,23 @@ const ErrorMessage = styled.div`
   margin-bottom: 15px;
   font-family: ${({ theme }) => theme.fonts.body};
 `;
+
+const TotalRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 12px 0 20px 0;
+`;
+
+const TotalLabel = styled.div`
+  font-weight: 700;
+  font-family: ${({ theme }) => theme.fonts.body};
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+const TotalValue = styled.div`
+  min-width: 120px;
+`;
+
+
