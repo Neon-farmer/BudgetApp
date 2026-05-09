@@ -1,5 +1,5 @@
 import { IPublicClientApplication, AccountInfo } from "@azure/msal-browser";
-import { loginRequest } from "../config/authConfig";
+import { loginRequest, apiRequest } from "../config/authConfig";
 import { handleAuthError } from "../utils/authRedirect";
 
 /**
@@ -18,35 +18,25 @@ export class AuthService {
    * @returns Promise<string> - The access token
    * @throws Error if no active account or token acquisition fails
    */
-  async getAccessToken(): Promise<string> {
+  async getAccessToken(): Promise<string | null> {
+    const accounts = this.msalInstance.getAllAccounts();
+    if (!accounts.length) return null;
+
     try {
-      const account = this.getActiveAccount();
-      if (!account) {
-        const error = new Error("No active account found. Please log in.");
-        handleAuthError(error, "Token acquisition");
-        throw error;
-      }
-
-      // Try to get token silently first
-      const response = await this.msalInstance.acquireTokenSilent({
-        ...loginRequest,
-        account,
+      const resp = await this.msalInstance.acquireTokenSilent({
+        account: accounts[0],
+        scopes: apiRequest.scopes,
       });
-
-      return response.accessToken;
-    } catch (error) {
-      console.error("Token acquisition failed:", error);
-      
-      // Check if this is an auth error that requires redirect
-      const wasHandled = handleAuthError(error, "Token acquisition");
-      
-      if (!wasHandled) {
-        // If it wasn't an auth error, throw a generic error
-        throw new Error("Failed to acquire access token");
-      } else {
-        // Re-throw the original error after handling redirect
-        throw error;
-      }
+      console.log("TOKEN AUD:", this.parseJwt(resp.accessToken)?.aud);
+      return resp.accessToken;
+    } catch (e) {
+      console.log("acquireTokenSilent failed, fallback to popup", e);
+      const resp = await this.msalInstance.acquireTokenPopup({
+        account: accounts[0],
+        scopes: apiRequest.scopes,
+      });
+      console.log("TOKEN AUD:", this.parseJwt(resp.accessToken)?.aud);
+      return resp.accessToken;
     }
   }
 
@@ -81,5 +71,21 @@ export class AuthService {
       name: account.name,
       email: account.username,
     };
+  }
+
+  /**
+   * Helper method to parse JWT token
+   * @param token - The JWT token string
+   * @returns Parsed token payload or null if invalid token
+   */
+  private parseJwt(token: string): any {
+    try {
+      const payload = token.split(".")[1];
+      const decoded = atob(payload);
+      return JSON.parse(decoded);
+    } catch (error) {
+      console.error("Failed to parse JWT token:", error);
+      return null;
+    }
   }
 }

@@ -68,10 +68,9 @@ export const msalConfig = {
 
 // Login request for initial authentication
 export const loginRequest = {
-    scopes: ["openid", "profile", "email"],
+  scopes: ["openid", "profile", "email"] // no Graph scopes here
 };
 
-// API request for accessing your backend
 export const apiRequest = {
-    scopes: [getApiScope()],
+  scopes: [ import.meta.env.VITE_AZURE_API_SCOPE ] // exact API scope
 };

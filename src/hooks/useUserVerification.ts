@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useMsal } from '@azure/msal-react';
-import { UserService, User, UserVerificationResponse } from '../services/userService';
+import { verifyUser as verifyUserFn, User } from '../services/userService';
 import { useApi } from './useApiService';
 
 export enum UserVerificationStatus {
@@ -40,8 +40,7 @@ export const useUserVerification = (): UseUserVerificationResult => {
       setStatus(UserVerificationStatus.LOADING);
       setError(null);
 
-      const userService = new UserService(apiService);
-      const result: UserVerificationResponse = await userService.verifyUser();
+      const result = await verifyUserFn(apiService);
 
       if (result.user.isActive) {
         setUser(result.user);

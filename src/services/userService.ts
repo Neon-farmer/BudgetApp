@@ -1,84 +1,52 @@
 import { ApiService } from './apiService';
 
 export interface User {
-  id: string;
+  id: number;
+  azureADUserId: string;
+  username: string;
   email: string;
-  name: string;
-  isActive: boolean;
-  createdAt: string;
-  lastLoginAt?: string;
+  budgetId?: number | null;
+  // keep isActive optional because API may not send it
+  isActive?: boolean;
+  // ...other fields...
 }
 
 export interface UserVerificationResponse {
   user: User;
   isAuthorized: boolean;
-  budget?: any; // Will contain budget data if user exists
+  budget?: any;
 }
 
-export class UserService {
-  constructor(private apiService: ApiService) {}
+// Standalone helper functions. Use these from React where you have an ApiService
+// instance (use the `useApi` hook to get one).
 
-  /**
-   * Get or create user in the database - calls your backend POST endpoint
-   * This will automatically create the user if they don't exist
-   * @returns Promise<User>
-   */
-  async getOrCreateUser(): Promise<User> {
-    try {
-      const response = await this.apiService.post<User>('/user');
-      return response.data;
-    } catch (error: any) {
-      // If there's a token issue (400)
-      if (error.status === 400) {
-        throw new Error('Invalid authentication token');
-      }
-      
-      // If user exists but is inactive (403)
-      if (error.status === 403) {
-        throw new Error('User account is inactive');
-      }
-      
-      // Other errors
-      throw error;
-    }
-  }
+export async function getOrCreateUser(apiService: ApiService): Promise<User> {
+  const res = await apiService.post('/user');
+  const user = (res.data as unknown) as User;
 
-  /**
-   * Verify if the current user exists in the database and is authorized
-   * @returns Promise<UserVerificationResponse>
-   */
-  async verifyUser(): Promise<UserVerificationResponse> {
-    try {
-      // Call the get-or-create endpoint
-      const user = await this.getOrCreateUser();
-      
-      // Return successful verification response
-      return {
-        user,
-        isAuthorized: user.isActive,
-        budget: undefined // Budget data can be loaded separately if needed
-      };
-    } catch (error: any) {
-      // Re-throw with appropriate error messages
-      throw error;
-    }
-  }
+  const normalized: User = {
+    ...user,
+    isActive: typeof user.isActive === 'boolean' ? user.isActive : true,
+  };
 
-  /**
-   * Get current user profile
-   * @returns Promise<User>
-   */
-  async getCurrentUser(): Promise<User> {
-    const response = await this.apiService.get<User>('/user/profile');
-    return response.data;
-  }
+  return normalized;
+}
 
-  /**
-   * Create a new user account (if auto-registration is enabled)
-   * @returns Promise<User>
-   */
-  async createUser(): Promise<User> {
-    const response = await this.apiService.post<User>('/user/create');
-    return response.data;
-  }
+export async function verifyUser(apiService: ApiService): Promise<UserVerificationResponse> {
+  const user = await getOrCreateUser(apiService);
+  return {
+    user,
+    isAuthorized: typeof user.isActive === 'boolean' ? user.isActive : true,
+    budget: undefined,
+  };
+}
+
+export async function getCurrentUser(apiService: ApiService): Promise<User> {
+  const response = await apiService.get('/user/profile');
+  return (response.data as unknown) as User;
+}
+
+export async function createUser(apiService: ApiService): Promise<User> {
+  const response = await apiService.post('/user/create');
+  return (response.data as unknown) as User;
 }
