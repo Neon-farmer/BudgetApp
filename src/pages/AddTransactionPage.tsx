@@ -16,15 +16,15 @@ export const AddTransactionPage = () => {
 
   const [envelopes, setEnvelopes] = useState<Envelope[]>([]);
   const [budget, setBudget] = useState<any>(null);
-  const [selectedEnvelopeId, setSelectedEnvelopeId] = useState<string>(envelopeId || "");
-  const [description, setDescription] = useState("");
+  const [sourceEnvelopeId, setSourceEnvelopeId] = useState<string>(envelopeId || "");
+  const [destinationEnvelopeId, setDestinationEnvelopeId] = useState<string>("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [envelopesLoading, setEnvelopesLoading] = useState(false);
 
-  // Fetch envelopes for the dropdown
+  // Fetch envelopes for the dropdowns
   useEffect(() => {
     fetchEnvelopes();
   }, []);
@@ -54,8 +54,13 @@ export const AddTransactionPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!selectedEnvelopeId || !description.trim() || !amount.trim()) {
+    if (!sourceEnvelopeId || !destinationEnvelopeId || !amount.trim()) {
       setError("Please fill in all required fields");
+      return;
+    }
+
+    if (sourceEnvelopeId === destinationEnvelopeId) {
+      setError("Source and destination envelopes must be different");
       return;
     }
 
@@ -65,14 +70,15 @@ export const AddTransactionPage = () => {
     }
 
     const numericAmount = parseFloat(amount);
-    if (isNaN(numericAmount)) {
-      setError("Please enter a valid amount");
+    if (isNaN(numericAmount) || numericAmount <= 0) {
+      setError("Please enter a valid positive amount");
       return;
     }
 
-    const envelopeIdNumber = parseInt(selectedEnvelopeId);
-    if (isNaN(envelopeIdNumber)) {
-      setError("Invalid envelope selected");
+    const sourceEnvelopeIdNumber = parseInt(sourceEnvelopeId);
+    const destinationEnvelopeIdNumber = parseInt(destinationEnvelopeId);
+    if (isNaN(sourceEnvelopeIdNumber) || isNaN(destinationEnvelopeIdNumber)) {
+      setError("Invalid envelopes selected");
       return;
     }
 
@@ -80,30 +86,43 @@ export const AddTransactionPage = () => {
     setError(null);
 
     try {
-      const transactionData = {
-        EnvelopeId: envelopeIdNumber,
-        Notes: description.trim(),
-        Amount: numericAmount,
+      const transactionDate = new Date(date).toISOString();
+      const transferNote = `Transfer to ${envelopes.find(e => e.id === destinationEnvelopeIdNumber)?.name || 'envelope'}`;
+
+      // Create debit transaction from source envelope
+      const debitTransaction = {
+        EnvelopeId: sourceEnvelopeIdNumber,
+        Notes: transferNote,
+        Amount: -numericAmount,
         BudgetId: budget.id,
-        Date: new Date(date).toISOString()
+        Date: transactionDate
       };
 
-      console.log("Creating transaction with data:", JSON.stringify(transactionData, null, 2));
-      console.log("Budget object:", budget);
-      console.log("Selected envelope ID:", selectedEnvelopeId);
-      
-      const response = await budgetApi.createTransaction(transactionData);
-      console.log("Create transaction response:", response);
+      console.log("Creating debit transaction:", JSON.stringify(debitTransaction, null, 2));
+      await budgetApi.createTransaction(debitTransaction);
 
-      // Navigate back to the envelope detail page
-      navigate(`/budget/envelope/${selectedEnvelopeId}`);
+      // Create credit transaction to destination envelope
+      const creditTransaction = {
+        EnvelopeId: destinationEnvelopeIdNumber,
+        Notes: `Transfer from ${envelopes.find(e => e.id === sourceEnvelopeIdNumber)?.name || 'envelope'}`,
+        Amount: numericAmount,
+        BudgetId: budget.id,
+        Date: transactionDate
+      };
+
+      console.log("Creating credit transaction:", JSON.stringify(creditTransaction, null, 2));
+      const response = await budgetApi.createTransaction(creditTransaction);
+      console.log("Transfer completed:", response);
+
+      // Navigate back to the source envelope detail page
+      navigate(`/budget/envelope/${sourceEnvelopeId}`);
     } catch (err) {
-      console.error("Failed to create transaction:", err);
+      console.error("Failed to complete transfer:", err);
       
       if (err instanceof ApiError) {
-        setError(`Failed to create transaction: ${err.message}`);
+        setError(`Failed to complete transfer: ${err.message}`);
       } else {
-        setError("Failed to create transaction");
+        setError("Failed to complete transfer");
       }
     } finally {
       setLoading(false);
@@ -111,8 +130,8 @@ export const AddTransactionPage = () => {
   };
 
   const handleCancel = () => {
-    if (selectedEnvelopeId) {
-      navigate(`/budget/envelope/${selectedEnvelopeId}`);
+    if (sourceEnvelopeId) {
+      navigate(`/budget/envelope/${sourceEnvelopeId}`);
     } else {
       navigate("/budget/envelopes");
     }
@@ -123,10 +142,10 @@ export const AddTransactionPage = () => {
       maxWidth="600px"
       breadcrumbs={[
         { label: 'Home', path: '/budget/home' },
-        { label: 'Add Transaction' }
+        { label: 'Transfer Money' }
       ]}
     >
-      <PageTitle align="center">Add New Transaction</PageTitle>
+      <PageTitle align="center">Transfer Money Between Envelopes</PageTitle>
 
       {error && (
         <ErrorMessage>
@@ -136,34 +155,40 @@ export const AddTransactionPage = () => {
 
       <Form onSubmit={handleSubmit}>
         <FormGroup>
-          <Label htmlFor="envelope">Envelope *</Label>
+          <Label htmlFor="source-envelope">From Envelope *</Label>
           {envelopesLoading ? (
             <LoadingText>Loading envelopes...</LoadingText>
           ) : (
             <EnvelopeSelector
-              id="envelope"
-              name="envelope"
+              id="source-envelope"
+              name="source-envelope"
               envelopes={envelopes}
-              value={selectedEnvelopeId}
-              onChange={setSelectedEnvelopeId}
-              placeholder="Select an envelope"
+              value={sourceEnvelopeId}
+              onChange={setSourceEnvelopeId}
+              placeholder="Select source envelope"
               required
               disabled={envelopesLoading}
             />
           )}
+          
         </FormGroup>
 
         <FormGroup>
-          <Label htmlFor="description">Description *</Label>
-          <Input
-            id="description"
-            name="description"
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter transaction description"
-            required
-          />
+          <Label htmlFor="destination-envelope">To Envelope *</Label>
+          {envelopesLoading ? (
+            <LoadingText>Loading envelopes...</LoadingText>
+          ) : (
+            <EnvelopeSelector
+              id="destination-envelope"
+              name="destination-envelope"
+              envelopes={envelopes}
+              value={destinationEnvelopeId}
+              onChange={setDestinationEnvelopeId}
+              placeholder="Select destination envelope"
+              required
+              disabled={envelopesLoading}
+            />
+          )}
         </FormGroup>
 
         <FormGroup>
@@ -173,12 +198,12 @@ export const AddTransactionPage = () => {
             name="amount"
             type="number"
             step="0.01"
+            inputMode="decimal"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0.00"
             required
           />
-          <HelpText>Enter positive amount for credits, negative for debits</HelpText>
         </FormGroup>
 
         <FormGroup>
@@ -195,7 +220,7 @@ export const AddTransactionPage = () => {
 
         <ButtonGroup>
           <Button type="submit" disabled={loading || envelopesLoading}>
-            {loading ? "Creating..." : "Create Transaction"}
+            {loading ? "Transferring..." : "Transfer Money"}
           </Button>
           <Button type="button" onClick={handleCancel} disabled={loading}>
             Cancel
@@ -243,22 +268,6 @@ const Input = styled.input`
   }
 `;
 
-const TextArea = styled.textarea`
-  padding: 12px 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 1rem;
-  min-height: 100px;
-  resize: vertical;
-  transition: border-color 0.2s ease;
-  font-family: ${({ theme }) => theme.fonts.body};
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-
 const ButtonGroup = styled.div`
   display: flex;
   gap: 12px;
@@ -274,12 +283,13 @@ const ErrorMessage = styled.div`
   border: 1px solid hsl(0, 100%, 90%);
 `;
 
-const HelpText = styled.small`
+const BalanceText = styled.small`
   display: block;
   margin-top: 4px;
   color: #666;
   font-size: 12px;
   font-family: ${({ theme }) => theme.fonts.body};
+  font-weight: 500;
 `;
 
 const LoadingText = styled.div`

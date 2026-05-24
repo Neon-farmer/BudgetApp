@@ -49,6 +49,8 @@ const Container = styled.div<{
   @media (max-width: 768px) {
     padding: ${({ $padding }) => $padding || '16px'};
   }
+
+  /* default padding is used on all viewports; header offset is handled by Main */
 `;
 
 export default PageContainer;

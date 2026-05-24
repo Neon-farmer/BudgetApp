@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
   const defaultNavigationItems: NavigationItem[] = [
     { label: 'Home', path: '/budget/home' },
     { label: 'Envelopes', path: '/budget/envelopes' },
-    { label: 'Transactions', path: '/budget/transactions' },
+    { label: 'Transactions', path: '/budget/transactions', hideOnDesktop: true },
     { label: 'Planner', path: '/budget/planner' },
   ];
 

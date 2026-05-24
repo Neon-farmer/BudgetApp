@@ -3,16 +3,18 @@ import styled from "styled-components";
 
 interface ButtonProps {
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
   color?: 'primary' | 'secondary' | 'danger';
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
   tooltip?: string; // Tooltip text to show when disabled
+  style?: React.CSSProperties;
 }
 
 const ButtonContainer = styled.div`
   position: relative;
   display: inline-block;
+  overflow: visible;
 `;
 
 const StyledButton = styled.button<{ $color: string }>`
@@ -60,7 +62,6 @@ const Tooltip = styled.div<{ $visible: boolean }>`
   font-size: 12px;
   font-family: ${({ theme }) => theme.fonts.body};
   border-radius: 4px;
-  white-space: nowrap;
   max-width: 300px;
   white-space: normal;
   text-align: center;
@@ -70,6 +71,7 @@ const Tooltip = styled.div<{ $visible: boolean }>`
   transition: opacity 0.2s ease, visibility 0.2s ease;
   z-index: 1000;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
 
   /* Tooltip arrow */
   &::after {
@@ -95,7 +97,8 @@ export const Button: React.FC<ButtonProps> = ({
   color = 'primary', 
   disabled = false,
   type = 'button',
-  tooltip
+  tooltip,
+  style
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -113,11 +116,13 @@ export const Button: React.FC<ButtonProps> = ({
     <ButtonContainer>
       <StyledButton 
         $color={color}
-        onClick={onClick} 
+        onClick={(e) => onClick && onClick(e)} 
         disabled={disabled}
         type={type}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        style={style}
+        title={disabled && tooltip ? tooltip : undefined}
       >
         {children}
       </StyledButton>

@@ -110,11 +110,19 @@ export const EnvelopeDetailPage = () => {
       return { canDelete: false, reason: "Envelope or budget information not loaded" };
     }
 
+    // Check if envelope has related plans
+    if (plans.length > 0) {
+      return { 
+        canDelete: false, 
+        reason: `Cannot delete envelope with active plans. Please delete the associated ${plans.length} plan(s) first.` 
+      };
+    }
+
     // Check if envelope has a balance
     if (envelope.balance !== 0) {
       return { 
         canDelete: false, 
-        reason: `Cannot delete envelope with a balance of ${formatCurrency(envelope.balance)}. Please transfer or spend the balance first.` 
+        reason: `Cannot delete envelope with a non-zero balance. Please transfer or spend the balance first.` 
       };
     }
 
@@ -184,7 +192,7 @@ export const EnvelopeDetailPage = () => {
   const calculatePlannedBalance = () => {
     if (!envelope) return 0;
     const totalPlanBalance = plans.reduce((sum, plan) => sum + plan.planBalance, 0);
-    return envelope.balance + totalPlanBalance;
+    return totalPlanBalance;
   };
 
   const formatCurrency = (amount: number) => {
@@ -267,7 +275,7 @@ export const EnvelopeDetailPage = () => {
 
       <ActionButtons>
         <Button onClick={handleAddTransaction}>
-          Add Transaction
+          Transfer Money
         </Button>
         <Button 
           color="danger" 
@@ -323,6 +331,7 @@ const DetailCard = styled.div`
   margin-bottom: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
+  overflow: visible;
 `;
 
 const DetailSection = styled.div`
@@ -361,6 +370,8 @@ const ActionButtons = styled.div`
   gap: 12px;
   justify-content: center;
   margin-bottom: 32px;
+  overflow: visible;
+  position: relative;
 `;
 
 const SectionHeader = styled.div`

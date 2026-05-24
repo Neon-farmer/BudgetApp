@@ -6,6 +6,7 @@ export interface NavigationItem {
   label: string;
   path: string;
   icon?: React.ReactNode;
+  hideOnDesktop?: boolean;
 }
 
 export interface NavigationProps {
@@ -25,7 +26,7 @@ export const Navigation: React.FC<NavigationProps> = ({ items, className }) => {
     <NavigationContainer className={className}>
       <NavigationList>
         {items.map((item, index) => (
-          <NavigationItem key={index}>
+          <NavigationItem key={index} $hideOnDesktop={item.hideOnDesktop}>
             <NavigationLink
               $isActive={location.pathname === item.path}
               onClick={() => handleNavigation(item.path)}
@@ -58,8 +59,12 @@ const NavigationList = styled.ul`
   }
 `;
 
-const NavigationItem = styled.li`
+const NavigationItem = styled.li<{ $hideOnDesktop?: boolean }>`
   display: flex;
+  
+  @media (min-width: 768px) {
+    display: ${({ $hideOnDesktop }) => $hideOnDesktop ? 'none' : 'flex'};
+  }
 `;
 
 const NavigationLink = styled.button<{ $isActive: boolean }>`

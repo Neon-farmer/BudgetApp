@@ -78,6 +78,7 @@ export const defaultTheme: ThemeInterface = {
     slow: '0.3s ease',
   },
 
-  custom: { 'loading': 'orbital' }
+  
+  // custom: { 'loading': 'orbital' }
 
 };

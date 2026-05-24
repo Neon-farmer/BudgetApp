@@ -35,6 +35,7 @@ const RedirectContainer = styled.div`
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: ${props => props.theme.spacing.md};
 `;
 
 const RedirectCard = styled.div`
@@ -44,6 +45,13 @@ const RedirectCard = styled.div`
   padding: 3rem;
   text-align: center;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 420px;
+
+  @media (max-width: 480px) {
+    padding: ${props => props.theme.spacing.xl};
+    max-width: 100%;
+  }
 `;
 
 const Spinner = styled.div`

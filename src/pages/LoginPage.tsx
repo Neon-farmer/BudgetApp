@@ -50,7 +50,7 @@ export const LoginPage: React.FC = () => {
 
 // Styled Components
 const LoginContainer = styled.div`
-  // min-height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,7 +131,7 @@ const LoginButton = styled.button`
   justify-content: center;
   gap: 12px;
   padding: ${props => props.theme.spacing.md} ${props => props.theme.spacing.lg};
-  background: ${props => props.theme.colors.info};
+  background: ${props => props.theme.colors.primary};
   color: ${props => props.theme.colors.text.inverse};
   border: none;
   border-radius: ${props => props.theme.borderRadius.lg};
@@ -146,10 +146,12 @@ const LoginButton = styled.button`
     background: ${props => props.theme.colors.primary};
     transform: translateY(-2px);
     box-shadow: ${props => props.theme.shadows.lg};
+    filter: brightness(1.1);
   }
 
   &:active {
     transform: translateY(0);
+    filter: brightness(0.95);
   }
 
   &:focus {

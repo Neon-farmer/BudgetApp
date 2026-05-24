@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Button } from "../components/Button";
@@ -9,10 +9,19 @@ import { EnvelopeSelector } from "../components/EnvelopeSelector";
 import { useBudgetApi } from "../hooks/useBudgetApi";
 import { CreateTransactionRequest, Envelope } from "../services/types";
 
+// Replace / extend existing styled components with mobile-optimized styles
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+  padding: 0 16px;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media(min-width: 768px) {
+    gap: 20px;
+    padding: 0;
+  }
 `;
 
 const FormGroup = styled.div`
@@ -24,16 +33,19 @@ const FormGroup = styled.div`
 const Label = styled.label`
   font-weight: 600;
   color: ${({ theme }) => theme.colors.primary};
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 `;
 
 const Input = styled.input`
-  padding: 12px 16px;
+  padding: 14px 16px;
   border: 2px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 1rem;
   font-family: ${({ theme }) => theme.fonts.body};
-  transition: border-color 0.2s ease;
+  transition: border-color 0.18s ease;
+  width: 100%;
+  box-sizing: border-box;
+  touch-action: manipulation;
 
   &:focus {
     outline: none;
@@ -43,17 +55,24 @@ const Input = styled.input`
   &:invalid {
     border-color: ${({ theme }) => theme.colors.danger};
   }
+
+  @media(min-width: 768px) {
+    padding: 12px 16px;
+    border-radius: 8px;
+  }
 `;
 
 const TextArea = styled.textarea`
-  padding: 12px 16px;
+  padding: 14px 16px;
   border: 2px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 1rem;
-  min-height: 100px;
+  min-height: 110px;
   resize: vertical;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.18s ease;
   font-family: ${({ theme }) => theme.fonts.body};
+  width: 100%;
+  box-sizing: border-box;
 
   &:focus {
     outline: none;
@@ -61,28 +80,54 @@ const TextArea = styled.textarea`
   }
 `;
 
+// Remove the old desktop-only ButtonGroup and add a mobile-friendly footer bar
 const ButtonGroup = styled.div`
+  display: none;
+
+  @media(min-width: 768px) {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+`;
+
+// Sticky bottom action bar for mobile
+const MobileActionBar = styled.div`
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: env(safe-area-inset-bottom);
+  padding: 10px 12px;
+  background: ${({ theme }) => theme.colors.surface};
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
   display: flex;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 10px;
+  z-index: 60;
+  box-shadow: 0 -6px 20px rgba(0,0,0,0.06);
+
+  @media(min-width: 768px) {
+    display: none;
+  }
 `;
 
 const ErrorMessage = styled.div`
   background: hsl(0, 100%, 95%);
   color: ${({ theme }) => theme.colors.danger};
-  padding: 15px;
+  padding: 12px;
   border-radius: 8px;
-  margin: 20px 0;
+  margin: 12px 0;
   border: 1px solid hsl(0, 100%, 90%);
+  font-size: 0.95rem;
 `;
 
 const SuccessMessage = styled.div`
   background: hsl(120, 100%, 95%);
   color: hsl(120, 50%, 30%);
-  padding: 15px;
+  padding: 12px;
   border-radius: 8px;
-  margin: 20px 0;
+  margin: 12px 0;
   border: 1px solid hsl(120, 100%, 85%);
+  font-size: 0.95rem;
 `;
 
 interface FormData {
@@ -109,6 +154,7 @@ export const AddExpensePage = () => {
   const [loadingEnvelopes, setLoadingEnvelopes] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   // Load envelopes on component mount
   useEffect(() => {
@@ -186,7 +232,7 @@ export const AddExpensePage = () => {
           date: new Date().toISOString().split('T')[0]
         });
         
-        // Auto-redirect after 2 seconds
+        // Auto-redirect after 1s on mobile for snappy UX
         setTimeout(() => {
           navigate("/budget/home");
         }, 1000);
@@ -204,7 +250,7 @@ export const AddExpensePage = () => {
   };
 
   const handleCancel = () => {
-    navigate("/");
+    navigate("/budget/home");
   };
 
   if (loadingEnvelopes) {
@@ -239,7 +285,8 @@ export const AddExpensePage = () => {
 
   return (
     <Container
-      maxWidth="600px"
+      // let container be full width on small screens for edge-to-edge layout
+      maxWidth="800px"
       breadcrumbs={[
         { label: 'Home', path: '/budget/home' },
         { label: 'Add Expense' }
@@ -253,7 +300,7 @@ export const AddExpensePage = () => {
         </ErrorMessage>
       )}
 
-      <Form onSubmit={handleSubmit}>
+  <Form ref={formRef} onSubmit={handleSubmit} aria-label="Add expense form">
           <FormGroup>
             <Label htmlFor="amount">Expense Amount *</Label>
             <Input
@@ -266,6 +313,8 @@ export const AddExpensePage = () => {
               min="0.01"
               placeholder="Enter expense amount"
               required
+              inputMode="decimal"         // mobile: show numeric keypad
+              pattern="^\d+(\.\d{1,2})?$"  // basic client-side pattern
             />
           </FormGroup>
 
@@ -280,6 +329,7 @@ export const AddExpensePage = () => {
               placeholder="Select an envelope"
               required
               disabled={loadingEnvelopes}
+                
             />
           </FormGroup>
 
@@ -306,6 +356,7 @@ export const AddExpensePage = () => {
             />
           </FormGroup>
 
+          {/* Desktop buttons */}
           <ButtonGroup>
             <Button type="submit" disabled={loading || loadingEnvelopes}>
               {loading ? "Adding Expense..." : "Add Expense"}
@@ -315,6 +366,28 @@ export const AddExpensePage = () => {
             </Button>
           </ButtonGroup>
         </Form>
+
+      {/* Mobile sticky action bar */}
+      <MobileActionBar role="toolbar" aria-label="Actions">
+        <Button
+          type="button"
+          onClick={handleCancel}
+          style={{ flex: 1, minHeight: 48, fontSize: 16 }}
+          disabled={loading}
+          aria-label="Cancel"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="button"
+          onClick={() => formRef.current?.requestSubmit()}
+          style={{ flex: 1, minHeight: 48, fontSize: 16 }}
+          disabled={loading || loadingEnvelopes}
+          aria-label="Add expense"
+        >
+          {loading ? "Adding..." : "Add Expense"}
+        </Button>
+      </MobileActionBar>
     </Container>
   );
 };

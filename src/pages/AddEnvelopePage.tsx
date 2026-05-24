@@ -128,7 +128,9 @@ export const AddEnvelopePage = () => {
             placeholder="Enter envelope name"
             required
             disabled={loading}
+            maxLength={20}
           />
+          <HelpText>{envelopeName.length}/20</HelpText>
         </FormGroup>
 
         <FormGroup>
@@ -207,4 +209,12 @@ const ErrorMessage = styled.div`
   border-radius: 8px;
   margin: 20px 0;
   border: 1px solid hsl(0, 100%, 90%);
+`;
+
+const HelpText = styled.small`
+  display: block;
+  margin-top: 4px;
+  color: #666;
+  font-size: 12px;
+  font-family: ${({ theme }) => theme.fonts.body};
 `;

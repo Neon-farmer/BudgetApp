@@ -12,6 +12,7 @@ interface ActionCardProps {
   tooltip?: string;
   children?: React.ReactNode; // Allow custom content instead of just button
   variant?: 'default' | 'settings'; // Add variant for different styles
+  disableHover?: boolean;
 }
 
 interface ActionGridProps {
@@ -20,22 +21,13 @@ interface ActionGridProps {
   minCardWidth?: string;
 }
 
-const Card = styled.div<{ $variant?: string }>`
+const Card = styled.div<{ $variant?: string; $disableHover?: boolean }>`
   background: ${props => props.theme.colors.surface};
   border: 1px solid ${props => props.theme.colors.border};
   border-radius: 8px;
   padding: 24px;
   text-align: center;
   transition: all 0.2s ease;
-  
-  ${props => props.$variant !== 'settings' && `
-    &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      transform: translateY(-2px);
-      border-color: ${props.theme.colors.primary};
-    }
-  `}
-
   @media (max-width: 768px) {
     padding: 20px;
   }

@@ -78,8 +78,10 @@ export const Layout: React.FC<LayoutProps> = ({
 
 // Styled Components
 const LayoutContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  /* Use block flow instead of flex column to prevent parent-level
+     flex behavior from affecting header/main stacking and to avoid
+     pushing content down on some desktop layouts. */
+  display: block;
   min-height: 100vh;
   background: ${({ theme }) => theme.colors.background || "#f8f9fa"};
 `;

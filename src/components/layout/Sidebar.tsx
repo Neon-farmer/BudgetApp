@@ -155,13 +155,9 @@ const SidebarContainer = styled.aside<{ $isOpen: boolean }>`
   flex-direction: column;
   
   @media (min-width: 768px) {
-    top: 72px;
-    position: static;
-    transform: none;
-    width: ${({ $isOpen }) => $isOpen ? '280px' : '0'};
-    border-right: ${({ $isOpen }) => $isOpen ? '1px solid' : 'none'} ${({ theme }) => theme.colors.border || '#e5e7eb'};
-    overflow: ${({ $isOpen }) => $isOpen ? 'visible' : 'hidden'};
-    transition: width 0.3s ease;
+    /* On desktop, hide the sidebar by default to prevent it from taking up space in the normal flow.
+       The sidebar should be accessed via a menu button on desktop, not visible by default. */
+    display: none;
   }
 `;
 
