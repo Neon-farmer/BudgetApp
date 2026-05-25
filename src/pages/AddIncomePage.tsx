@@ -377,7 +377,6 @@ export const AddIncomePage = () => {
             {allocationMode === 'planner' && (
               <div style={{ marginTop: 8, color: '#374151' }}>
                 The planner will automatically distribute this income to your plans/envelopes according to priorities.
-                You can open the planner after allocation to review or adjust the results.
               </div>
             )}
           </FormGroup>

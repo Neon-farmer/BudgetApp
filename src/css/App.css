@@ -16,11 +16,10 @@
              Previously making #root a flex container pushed top-level children into a column layout
              that created extra vertical spacing on desktop. Removing the flex avoids that. */
         display: block;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        overflow-y: auto;
+        -webkit-user-select: none;
+        user-select: none;
+        overscroll-behavior: contain; /* Prevent bounce scrolling on iOS */
     }
   
 
