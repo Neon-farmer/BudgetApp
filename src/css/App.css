@@ -9,12 +9,18 @@
 #root {
         width: 100vw;
         height: 100vh;
+        height: 100dvh; /* Use dynamic viewport height for iOS where address bar changes */
         margin: 0 !important;
         padding: 0 !important;
         /* Keep root as a normal block so page-level layout (LayoutContainer/Main) controls flow.
              Previously making #root a flex container pushed top-level children into a column layout
              that created extra vertical spacing on desktop. Removing the flex avoids that. */
         display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
   
 
