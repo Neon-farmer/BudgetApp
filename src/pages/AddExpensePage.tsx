@@ -14,13 +14,9 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 0 16px;
-  width: 100%;
-  box-sizing: border-box;
 
   @media(min-width: 768px) {
     gap: 20px;
-    padding: 0;
   }
 `;
 
@@ -43,10 +39,7 @@ const Input = styled.input`
   font-size: 1rem;
   font-family: ${({ theme }) => theme.fonts.body};
   transition: border-color 0.18s ease;
-  width: 100%;
-  box-sizing: border-box;
   touch-action: manipulation;
-  min-width: 0;  /* Allow input to shrink below its content size */
 
   &:focus {
     outline: none;
@@ -72,8 +65,6 @@ const TextArea = styled.textarea`
   resize: vertical;
   transition: border-color 0.18s ease;
   font-family: ${({ theme }) => theme.fonts.body};
-  width: 100%;
-  box-sizing: border-box;
 
   &:focus {
     outline: none;
