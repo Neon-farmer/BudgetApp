@@ -35,17 +35,30 @@ const App = () => {
   // This is especially important for iOS PWA standalone mode
   useEffect(() => {
     // Trigger a reflow/repaint to ensure safe-area-inset environment variables are calculated
-    const root = document.documentElement;
-    root.style.display = 'block';
-    void root.offsetHeight; // Trigger reflow
+    const root = document.getElementById('root');
+    if (!root) return;
+
+    // Initially hide to prevent glitch
+    root.classList.remove('ready');
     
-    // Also ensure viewport is set correctly
+    // Trigger multiple reflows to ensure safe-area-inset is calculated
+    root.style.display = 'block';
+    void root.offsetHeight; // Trigger reflow 1
+    
+    // Wait for iOS to calculate safe-area-inset values
+    const showApp = () => {
+      root.classList.add('ready');
+    };
+
     if ((navigator as any).standalone === true) {
-      // App is running in PWA standalone mode
-      // Force a recalculation after a small delay to account for iOS Safari timing
+      // App is running in PWA standalone mode - give it more time
       setTimeout(() => {
         window.dispatchEvent(new Event('resize'));
-      }, 100);
+        setTimeout(showApp, 150);
+      }, 50);
+    } else {
+      // Regular browser - show immediately
+      showApp();
     }
   }, []);
 

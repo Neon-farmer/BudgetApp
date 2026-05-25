@@ -21,6 +21,12 @@
         user-select: none;
         overscroll-behavior: contain; /* Prevent bounce scrolling on iOS */
         touch-action: manipulation; /* Remove 300ms tap delay on iOS */
+        opacity: 0; /* Hide initially to prevent glitch */
+        transition: opacity 0.1s ease-in;
+    }
+
+    #root.ready {
+        opacity: 1;
     }
   
 
