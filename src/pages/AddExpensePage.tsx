@@ -46,6 +46,7 @@ const Input = styled.input`
   width: 100%;
   box-sizing: border-box;
   touch-action: manipulation;
+  min-width: 0;  /* Allow input to shrink below its content size */
 
   &:focus {
     outline: none;

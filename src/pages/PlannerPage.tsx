@@ -189,6 +189,9 @@ export const PlannerPage = () => {
     <Container breadcrumbs={commonBreadcrumbs.planner}>
       <Header>
         <PageTitle align="center">Planner</PageTitle>
+        <InstructionText>
+          Plans are allocated in order from top to bottom. Drag plans to rearrange their priority when updating monthly balances.
+        </InstructionText>
         <HeaderActions>
           <Button onClick={handleCreatePlan}>
             Create New Plan
@@ -274,6 +277,18 @@ const Header = styled.div`
     gap: 15px;
     align-items: stretch;
   }
+`;
+
+const InstructionText = styled.p`
+  text-align: center;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 0.95rem;
+  margin: 12px 0 0 0;
+  line-height: 1.4;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const HeaderActions = styled.div`

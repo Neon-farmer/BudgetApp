@@ -23,6 +23,8 @@ export const Header: React.FC<HeaderProps> = ({
     { label: 'Envelopes', path: '/budget/envelopes' },
     { label: 'Transactions', path: '/budget/transactions', hideOnDesktop: true },
     { label: 'Planner', path: '/budget/planner' },
+    { label: 'Help', path: '/budget/help' },
+    { label: 'Settings', path: '/budget/settings' },
   ];
 
   const navItems = navigationItems.length > 0 ? navigationItems : defaultNavigationItems;
