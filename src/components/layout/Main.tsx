@@ -30,13 +30,13 @@ const MainContainer = styled.main<{
   $hasSidebar: boolean;
   $sidebarOpen: boolean;
 }>`
-  padding-top: 64px;
+  padding-top: calc(64px + max(0px, env(safe-area-inset-top)));
   flex: 1;
   min-height: 0;
   background: ${({ theme }) => theme.colors.background || '#f8f9fa'};
   
   @media (min-width: 768px) {
-    padding-top: 72px;
+    padding-top: calc(72px + max(0px, env(safe-area-inset-top)));
     margin-left: ${({ $hasSidebar, $sidebarOpen }) => 
       $hasSidebar && $sidebarOpen ? '280px' : '0'};
     transition: margin-left 0.3s ease;

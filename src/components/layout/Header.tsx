@@ -58,6 +58,7 @@ const HeaderContainer = styled.header`
   left: 0;
   right: 0;
   height: 64px;
+  padding-top: max(0px, env(safe-area-inset-top));
   background: ${({ theme }) => theme.colors.surface || '#ffffff'};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border || '#e5e7eb'};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
