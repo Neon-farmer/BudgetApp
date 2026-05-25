@@ -90,6 +90,8 @@ const MenuButton = styled.button`
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  touch-action: manipulation; /* Remove 300ms tap delay on iOS */
+  -webkit-tap-highlight-color: transparent; /* Remove default iOS tap highlight */
   
   &:hover {
     background: ${({ theme }) => theme.colors.background || '#f8f9fa'};

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useMsal } from "@azure/msal-react";
+import { useEffect } from "react";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
@@ -29,6 +30,24 @@ const App = () => {
   const activeAccount = instance.getActiveAccount();
   
   const isAuthenticated = activeAccount != null;
+
+  // Force layout recalculation on app load to ensure safe-area-inset values are applied
+  // This is especially important for iOS PWA standalone mode
+  useEffect(() => {
+    // Trigger a reflow/repaint to ensure safe-area-inset environment variables are calculated
+    const root = document.documentElement;
+    root.style.display = 'block';
+    void root.offsetHeight; // Trigger reflow
+    
+    // Also ensure viewport is set correctly
+    if ((navigator as any).standalone === true) {
+      // App is running in PWA standalone mode
+      // Force a recalculation after a small delay to account for iOS Safari timing
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 100);
+    }
+  }, []);
 
   return (
     <BrowserRouter>
