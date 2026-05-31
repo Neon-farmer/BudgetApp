@@ -229,25 +229,36 @@ export const PlannerPage = () => {
           </Button>
         </EmptyState>
       ) : (
-        <DraggableTable
-          data={sortedPlans}
-          columns={columns}
-          onReorder={handleReorder}
-          onRowClick={handlePlanClick}
-          getRowKey={(plan) => plan.id}
-          empty={
-            <EmptyState>
-              <h3>No Plans Yet</h3>
-              <p>
-                You haven't created any budget plans yet. Plans help you organize your 
-                savings and spending goals over time.
-              </p>
-              <Button onClick={handleCreatePlan}>
-                Create Your First Plan
-              </Button>
-            </EmptyState>
-          }
-        />
+        <>
+          <DraggableTable
+            data={sortedPlans}
+            columns={columns}
+            onReorder={handleReorder}
+            onRowClick={handlePlanClick}
+            getRowKey={(plan) => plan.id}
+            empty={
+              <EmptyState>
+                <h3>No Plans Yet</h3>
+                <p>
+                  You haven't created any budget plans yet. Plans help you organize your 
+                  savings and spending goals over time.
+                </p>
+                <Button onClick={handleCreatePlan}>
+                  Create Your First Plan
+                </Button>
+              </EmptyState>
+            }
+          />
+          
+          {sortedPlans.length > 0 && (
+            <TotalSection>
+              <TotalLabel>Total Monthly Planned Amount:</TotalLabel>
+              <TotalAmount>
+                {formatAmount(sortedPlans.reduce((sum, plan) => sum + plan.monthlyAmount, 0))}
+              </TotalAmount>
+            </TotalSection>
+          )}
+        </>
       )}
 
       <ConfirmationModal
@@ -388,3 +399,43 @@ const EmptyState = styled.div`
     padding: 40px 20px;
   }
 `;
+
+const TotalSection = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid ${({ theme }) => theme.colors.border || '#e5e7eb'};
+  margin-bottom: 30px;
+
+  @media (max-width: 768px) {
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 15px;
+  }
+`;
+
+const TotalLabel = styled.span`
+  font-weight: 600;
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-family: ${({ theme }) => theme.fonts.body};
+
+  @media (max-width: 768px) {
+    font-size: 0.95rem;
+  }
+`;
+
+const TotalAmount = styled.span`
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: ${({ theme }) => theme.colors.success};
+  font-family: ${({ theme }) => theme.fonts.body};
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
+`;
+
