@@ -9,6 +9,14 @@ export const HelpPage: React.FC = () => {
     <Container maxWidth="900px" breadcrumbs={commonBreadcrumbs.home}>
       <PageTitle align="center">Help & How to use the App</PageTitle>
 
+      <SectionTitle>Quick Start Guide</SectionTitle>
+      <InstructionList>
+        <InstructionItem>1. Create your envelopes for the spending categories you want to track in the application.</InstructionItem>
+        <InstructionItem>2. Create your monthly plans to decide which envelopes will have income automatically allocated each month.</InstructionItem>
+        <InstructionItem>3. Choose a month to begin your budget. If you want to begin within the current month, click 'update plan balances' once all plans are added. Otherwise, if auto-plan is enabled, the plan balances will update at the beginning of each month.</InstructionItem>
+        <InstructionItem>4. Add income for your current bank balance directly into your default envelope to initialize your balance, and transfer balances to other envelopes if needed.</InstructionItem>
+      </InstructionList>
+
       <SectionTitle>Envelopes</SectionTitle>
       <Paragraph>
         Envelopes are categories that hold money for specific purposes (rent, groceries, savings, etc.).

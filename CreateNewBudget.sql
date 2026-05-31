@@ -49,12 +49,6 @@ BEGIN TRY
         TitheEnvelopeId = @TitheEnvelopeId
     WHERE Id = @BudgetId;
 
-    -- === Optional: Create an example plan ===
-    INSERT INTO Plans (BudgetId, Name, EnvelopeId, Priority, MonthlyAmount, StartDate, PlanBalance)
-    VALUES (@BudgetId, @ExamplePlanName, @DefaultEnvelopeId, 1, @ExamplePlanMonthlyAmount, @ExamplePlanStartDate, 0.00);
-
-    SET @PlanId = SCOPE_IDENTITY();
-    PRINT 'Created plan id = ' + CAST(@PlanId AS NVARCHAR(20));
 
     -- === Attach budget to a user ===
     IF EXISTS (SELECT 1 FROM Users WHERE Id = @UserId)
