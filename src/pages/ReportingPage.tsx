@@ -29,10 +29,11 @@ const DateRow = styled.div`
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  overflow: hidden;
 
   input {
     margin-bottom: 0;
-    padding: 14px 16px;
+    padding: 14px 12px;
     border: 2px solid #e5e7eb;
     border-radius: 10px;
     font-size: 1rem;
@@ -41,6 +42,10 @@ const DateRow = styled.div`
     touch-action: manipulation;
     box-sizing: border-box;
     width: 100%;
+    max-width: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 
     @media (min-width: 768px) {
       padding: 12px 16px;
@@ -52,6 +57,7 @@ const DateRow = styled.div`
     margin-bottom: 0;
     flex: 1;
     min-width: 0;
+    overflow: hidden;
   }
 
   @media (max-width: 600px) {
@@ -60,6 +66,12 @@ const DateRow = styled.div`
 
     > div {
       flex: 1 1 100%;
+      width: 100%;
+    }
+
+    input {
+      padding: 12px 12px;
+      font-size: 16px;
     }
   }
 `;
