@@ -177,7 +177,6 @@ export const TransactionDetailPage = () => {
         <Button onClick={handleBackToEnvelope}>
           View Envelope
         </Button>
-       
       </ActionButtons>
     </Container>
   );

@@ -26,6 +26,10 @@ export const HomePage = () => {
     navigate("/budget/planner");
   };
 
+  const handleViewTransactionReport = () => {
+    navigate("/budget/reporting");
+  };
+
   const handleStyleGuide = () => {
     navigate("/budget/style-guide");
   };
@@ -69,6 +73,12 @@ export const HomePage = () => {
           description="Move money between two of your envelopes to redistribute your budget allocation."
           buttonText="Transfer Money"
           onClick={handleTransferMoney}
+        />
+        <ActionCard
+          title="Transaction Statistics"
+          description="View detailed analytics of your transactions and track income and expenses over time."
+          buttonText="View Statistics"
+          onClick={handleViewTransactionReport}
         />
         
       </ActionGrid>

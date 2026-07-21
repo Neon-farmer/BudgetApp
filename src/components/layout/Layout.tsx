@@ -42,6 +42,7 @@ export const Layout: React.FC<LayoutProps> = ({
     { label: "Add Income", path: "/budget/add-income" },
     { label: "Envelopes", path: "/budget/envelopes" },
     { label: "Planner", path: "/budget/planner" },
+    { label: "Statistics", path: "/budget/reporting" },
     { label: "Settings", path: "/budget/settings" },
     { label: "Help", path: "/budget/help" },
   ];

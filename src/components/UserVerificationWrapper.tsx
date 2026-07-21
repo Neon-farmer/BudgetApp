@@ -16,9 +16,7 @@ export const UserVerificationWrapper: React.FC<UserVerificationWrapperProps> = (
   if (isLoading) {
     return (
       <VerificationContainer>
-        <VerificationCard>
-          <Loading message="Verifying user access..." size="lg" />
-        </VerificationCard>
+        <Loading message="Verifying user access..." size="lg" />
       </VerificationContainer>
     );
   }
@@ -78,7 +76,7 @@ export const UserVerificationWrapper: React.FC<UserVerificationWrapperProps> = (
 
 // Styled Components
 const VerificationContainer = styled.div`
-//   min-height: 100vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;

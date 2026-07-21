@@ -16,7 +16,7 @@ export const EnvelopesPage = () => {
   const navigate = useNavigate();
   const { isLoading: globalLoading, showLoading, hideLoading } = useGlobalLoading();
   const [envelopes, setEnvelopes] = useState<Envelope[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [budgetId, setBudgetId] = useState<number | null>(null);
 
@@ -47,6 +47,7 @@ export const EnvelopesPage = () => {
         setBudgetId(response.data.id);
       } catch (err) {
         console.error('Failed to fetch budget:', err);
+        setLoading(false);
         if (err instanceof ApiError) {
           setError(`Failed to load budget: ${err.message}`);
         } else {

@@ -22,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
     { label: 'Home', path: '/budget/home' },
     { label: 'Envelopes', path: '/budget/envelopes' },
     { label: 'Transactions', path: '/budget/transactions', hideOnDesktop: true },
+    { label: 'Transaction Report', path: '/budget/reporting' },
     { label: 'Planner', path: '/budget/planner' },
     { label: 'Help', path: '/budget/help' },
     { label: 'Settings', path: '/budget/settings' },
