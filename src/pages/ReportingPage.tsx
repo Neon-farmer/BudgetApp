@@ -32,6 +32,18 @@ const DateRow = styled.div`
 
   input {
     margin-bottom: 0;
+    padding: 14px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.18s ease;
+    touch-action: manipulation;
+
+    @media (min-width: 768px) {
+      padding: 12px 16px;
+      border-radius: 8px;
+    }
   }
 
   > div {
@@ -103,35 +115,31 @@ const ErrorMessage = styled.div`
   margin-bottom: 1.5rem;
 `;
 
-const TransactionTypeSelect = styled.select`
+const TransactionTypeToggle = styled.button<{ $type: 'expenses' | 'income' }>`
   width: 100%;
   padding: 12px 16px;
   border: 2px solid #e5e7eb;
   border-radius: 8px;
   background: white;
+  color: ${({ $type }) => ($type === 'expenses' ? '#dc2626' : '#059669')};
   cursor: pointer;
   font-family: inherit;
   font-size: 1rem;
-  appearance: none;
-  background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%224b5563%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3e%3cpolyline points=%226 9 12 15 18 9%22%3e%3c/polyline%3e%3c/svg%3e');
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 16px;
-  padding-right: 40px;
+  font-weight: 600;
   transition: all 0.2s ease;
+  touch-action: manipulation;
+
+  &:active {
+    transform: scale(0.98);
+  }
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.primary};
+    background: #f9fafb;
   }
 
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.primary}20;
-  }
-
-  option {
-    padding: 8px;
+  @media (max-width: 600px) {
+    padding: 14px 16px;
   }
 `;
 
@@ -261,7 +269,6 @@ export const ReportingPage: React.FC = () => {
       { label: 'Transaction Statistics' }
     ]}>
       <PageTitle>Transaction Statistics</PageTitle>
-      <Subtitle>View transaction history</Subtitle>
 
       {error && (
         <ErrorMessage>
@@ -309,15 +316,17 @@ export const ReportingPage: React.FC = () => {
           </FormGroup>
 
           <FormGroup>
-            <Label htmlFor="transaction-type-filter">Transaction Type</Label>
-            <TransactionTypeSelect
-              id="transaction-type-filter"
-              value={transactionTypeFilter}
-              onChange={(e) => setTransactionTypeFilter(e.target.value as 'expenses' | 'income')}
+            <Label>Transaction Type</Label>
+            <TransactionTypeToggle
+              $type={transactionTypeFilter}
+              onClick={() =>
+                setTransactionTypeFilter(
+                  transactionTypeFilter === 'expenses' ? 'income' : 'expenses'
+                )
+              }
             >
-              <option value="expenses">Expenses Only</option>
-              <option value="income">Income Only</option>
-            </TransactionTypeSelect>
+              {transactionTypeFilter === 'expenses' ? 'Expenses' : 'Income'}
+            </TransactionTypeToggle>
           </FormGroup>
         </EnvelopeFilterContainer>
       </ControlsContainer>
