@@ -39,6 +39,8 @@ const DateRow = styled.div`
     font-family: inherit;
     transition: border-color 0.18s ease;
     touch-action: manipulation;
+    box-sizing: border-box;
+    width: 100%;
 
     @media (min-width: 768px) {
       padding: 12px 16px;
@@ -48,11 +50,17 @@ const DateRow = styled.div`
 
   > div {
     margin-bottom: 0;
+    flex: 1;
+    min-width: 0;
   }
 
   @media (max-width: 600px) {
     flex-direction: column;
     gap: 0.8rem;
+
+    > div {
+      flex: 1 1 100%;
+    }
   }
 `;
 

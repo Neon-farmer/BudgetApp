@@ -77,11 +77,7 @@ export const TransactionReportList: React.FC<TransactionReportListProps> = ({
         header: 'Date',
         width: '25%',
         render: (value) =>
-          new Date(value).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          }),
+          new Date(value).toLocaleDateString(),
       },
       {
         key: 'envelopeId',
