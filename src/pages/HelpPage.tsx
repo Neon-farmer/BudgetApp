@@ -20,20 +20,18 @@ export const HelpPage: React.FC = () => {
       <SectionTitle>Envelopes</SectionTitle>
       <Paragraph>
         Envelopes are categories that hold money for specific purposes (rent, groceries, savings, etc.).
-        The Envelopes page lists all envelopes and their current balances. Click an envelope to view recent transactions
-        or to edit envelope details. Use the + Add Envelope button to create a new envelope.
-      </Paragraph>
-
-      <SectionTitle>Transactions</SectionTitle>
-      <Paragraph>
-        Record expenses and income on the Transactions page. When you add an expense, select which envelope it
-        should deduct from. Income can be allocated to envelopes manually or via the Planner.
+        The Envelopes page lists all envelopes and their current balances. Click an envelope to view recent transactions, 
+        view the envelope balance, or transfer money to another envelope. The balance of an envelope shows money that is 
+        currently available in that envelope, while the planned balance shows the expected amount yet to be applied once 
+        sufficient income is recorded.
       </Paragraph>
 
       <SectionTitle>Planner</SectionTitle>
       <Paragraph>
-        The Planner helps you schedule recurring amounts and prepare monthly allocations. Use the Planner to create
-        plans and apply them on the first of the month or when you run the planner manually.
+        The Planner helps you schedule recurring amounts and prepare monthly income allocations. Use the Planner to create
+        plans and apply them on the first of the month or when you run the planner manually. The highest priority plans are always
+        applied first to ensure your most important expenses are covered. Priority can be updated by dragging and dropping plans
+        on the Planner page - plans at the top of the page are the highest priority.
       </Paragraph>
 
       <SectionTitle>Settings</SectionTitle>
